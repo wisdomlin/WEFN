@@ -1,17 +1,18 @@
 # compare algorithms
 from pandas import read_csv
 from matplotlib import pyplot
+
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection._split import RepeatedStratifiedKFold
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
-
-from sklearn.model_selection._split import RepeatedStratifiedKFold
 
 # Load dataset
 names = ['F1', 'F2', 'F3', 'F4', 'Label']
@@ -24,7 +25,7 @@ array = dataset.values
 X = array[:,0:4]	
 # Label (Column 4)
 y = array[:,4]		
-# X_train, X_validation, y_train, y_validation = train_test_split(X, y, test_size=0.20, random_state=1, shuffle=True)
+# split train/test set, and stratify by label
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=1, stratify=y)
 
 # Spot Check Algorithms
