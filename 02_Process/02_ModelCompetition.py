@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, hamming_loss
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -90,19 +90,16 @@ for name, model in models:
         ovr.fit(X_train, y_train)    
         # make predictions
         y_pred = ovr.predict(X_test)
-        # print('ytrue is {}'.format(test[label].values))
+        # print('y_pred is {}'.format(y_pred))
         y_preds.append(y_pred)
-        # print('yhat is {}'.format(yhat))
+        # print('y_true is {}'.format(y_test))
         y_trues.append(y_test)
-        # evaluate predictions
-        print('Test accuracy is {}'.format(accuracy_score(y_test, y_pred)))
+        # print('Test accuracy is {}'.format(accuracy_score(y_test, y_pred)))
 
-    # print('y_trues is {}'.format(y_trues))
-    # print('y_preds is {}'.format(y_preds))
-    print('multilable classification accuracy_score is {}'.format(accuracy_score(y_trues, y_preds)))	
-	# print(accuracy_score(y_test, predictions))
-	# print(confusion_matrix(y_test, predictions))
-	# print(classification_report(y_test, predictions))
+    # Multilabel Evaluation Metrics
+    # print('Subset accuracy (exact match ratio) is {}'.format(accuracy_score(y_trues, y_preds)))
+    print('Hamming score (label-based accuracy) is {}'.format(1-hamming_loss(y_trues, y_preds)))
+
 
 
 
