@@ -51,7 +51,8 @@ for train_index, test_index in cv.split(X):
     cnt += 1
     # print("TRAIN:", train_index)
     # print("TEST:", test_index)
-    # 
+    
+    # majority vote
     pred_sumup = {}
     shape = df[labels].values[test_index].shape[0]
     print('shape:', shape)
@@ -67,7 +68,7 @@ for train_index, test_index in cv.split(X):
         print('model: ' + name)              
         # define OvR strategy
         ovr = OneVsRestClassifier(model)
-        # multilable classification
+        # multilabel classification
         y_trues = []
         y_preds = []
         # 3. For Labels
@@ -92,7 +93,7 @@ for train_index, test_index in cv.split(X):
         # print('y_trues is {}'.format(y_trues))
         eclf_trues = y_trues
     
-    # Compute Majority Vote Score  
+    # Compute Majority Vote 
     for key in pred_sumup:            
         for arr in pred_sumup[key]:
             print('pred_sumup: ', arr)
