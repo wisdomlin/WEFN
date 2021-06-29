@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class NSA:
   def __init__(self, CRT, Year, W1, W2, E1, E2, F1, F2, L1, L2, C1, C2):
     self.CRT = CRT
@@ -19,11 +18,11 @@ class NSA:
 
   def NSA_run(self):
     if self.CRT == 3:
-      Water=((self.W1-0.40)/0.40+2)*2/5+((self.W2-0.29)/0.29+2)*3/5
-      Energy=((self.E1-0.88)/0.88+2)*3/5+((self.E2-0.80)/0.80+2)*2/5
-      Food=((self.F1-13523)/13523+2)*2/4+((self.F2-(-0.0730))/(-0.0730)+2)*2/4
-      Labor=((self.L1-1.42)/1.42+2)*1/4+((self.L2-0.045)/0.045+2)*3/4
-      Capital=((self.C1-0.096)/0.096+2)*1/4+((self.C2-0.223)/0.223+2)*3/4
+      Water = ((self.W1-0.40)/0.40+2)*2/5 + ((self.W2-0.29)/0.29+2)*3/5      
+      Energy = ((self.E1-0.88)/0.88+2)*3/5 + ((self.E2-0.80)/0.80+2)*2/5      
+      Food = ((self.F1-13.523)/13.523+2)*2/4 + ((self.F2-(-0.073))/(-0.073)+2)*2/4      
+      Labor = ((self.L1-1.42)/1.42+2)*1/4 + ((self.L2-0.045)/0.045+2)*3/4      
+      Capital = ((self.C1-0.096)/0.096+2)*1/4 + ((self.C2-0.223)/0.223+2)*3/4      
       return Water, Energy, Food, Labor, Capital
 
 
@@ -116,24 +115,23 @@ chart[0][5]="Capita"
 
 
 for i in range(1,DBS_Y):
-  #NSA
+  # NSA
   nsa = NSA(Country_type, 
             DBS[i][0], DBS[i][1], DBS[i][2], DBS[i][3], DBS[i][4], 
             DBS[i][5], DBS[i][6], DBS[i][7], DBS[i][8], DBS[i][9], 
             DBS[i][10])
-  nsa.NSA_run()
   W, E, F, L, C = nsa.NSA_run()
-  chart[i][1]=round(W,3)
-  chart[i][2]=round(E,3)
-  chart[i][3]=round(F,3)
-  chart[i][4]=round(L,3)
-  chart[i][5]=round(C,3)
+  chart[i][1] = round(W,3)
+  chart[i][2] = round(E,3)
+  chart[i][3] = round(F,3)
+  chart[i][4] = round(L,3)
+  chart[i][5] = round(C,3)
   
-  chart[i][0]=DBS[i][0]
+  chart[i][0] = DBS[i][0]
   print(chart[i][0])
   print("Water:" + str(chart[i][1]) + "; Energy: " + str(chart[i][2]) + "; Food: " + str(chart[i][3]) + "; Labor: " +str(chart[i][4]) + "; Capita: " + str(chart[i][5]))
   
-  #DRG
+  # DRG
   radar_graph = DRG(W, E, F, L, C, DBS[i][0])
   radar_graph.DRG_run()
   
