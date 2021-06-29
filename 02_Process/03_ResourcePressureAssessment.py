@@ -1,11 +1,6 @@
-#FAO Method for Taiwan(2006~2016) (v20210108)
-"""
-import csv
-with open(‘2.1_input_Taiwan.csv’, ‘r’) as file:
-	reader = csv.reader(file)
-	DBS= [row for row in reader]
-	#print(DBS)
-"""
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class NSA:
   def __init__(self, CRT, Year, W1, W2, E1, E2, F1, F2, L1, L2, C1, C2):
@@ -33,37 +28,68 @@ class NSA:
 
 
 class DRG:
-  def __init__(self, Water, Energy, Food, Labor, Capital):
+  def __init__(self, Water, Energy, Food, Labor, Capital, PlotTitle):
     self.Water = float(Water)
     self.Energy = float(Energy)
     self.Food = float(Food)
     self.Labor = float(Labor)
     self.Capital = float(Capital)
+    self.PlotTitle = PlotTitle
   
   def DRG_run(self):
-    import matplotlib.pyplot as plt
+    # correct display of Chinese and minus signs
     plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
     plt.rcParams['axes.unicode_minus'] = False
-    plt.style.use('ggplot')
+    
+    # drawing style
+    # plt.style.use('ggplot')
+    # plt.style.use('seaborn')
+    # plt.style.use('seaborn-whitegrid')
+    plt.style.use('seaborn-poster')
+    
+    # plot data construction
     values = [self.Water, self.Energy, self.Food, self.Labor, self.Capital]
-    feature = ['Water','Energy','Food','Labor','Capital']
-    angles=np.linspace(0, 2*np.pi,len(values), endpoint=False)
-    values=np.concatenate((values,[values[0]]))
-    angles=np.concatenate((angles,[angles[0]]))
-    fig=plt.figure()
+    features = ['Water','Energy','Food','Labor','Capital']
+    
+    # set the angle of radar chart. The circle is divided into equal parts.
+    angles = np.linspace(0, 2*np.pi, len(values), endpoint=False)
+    
+    # In order to close the radar chart in a circle, the following steps are required.
+    values = np.concatenate((values, [values[0]]))
+    angles = np.concatenate((angles, [angles[0]]))
+    features = np.concatenate((features, [features[0]]))
+    
+    # Create a new figure
+    fig = plt.figure()
+    
+    # Add subplot with polar axes. "111" means "1x1 grid, first subplot".
     ax = fig.add_subplot(111, polar=True)
+    
+    # Draw a line chart
     ax.plot(angles, values, 'o-', linewidth=2)
+    
+    # Set the color and transparency of line chart
     ax.fill(angles, values, alpha=0.25)
-    # ax.set_thetagrids(angles * 180/np.pi, feature)
-    ax.set_ylim(0,3)
-    plt.title(DBS[i][0])
+    
+    # Add feature names for each feature
+    ax.set_thetagrids(angles * 180/np.pi, features)
+    
+    # Set the range of the radar chart
+    ax.set_ylim(0, 3)
+    
+    # Set the plot title
+    plt.title(self.PlotTitle)
+    
+    # Add grid lines
     ax.grid(True)
+    
+    # show the plot
     plt.show()
 
+# FAO Method for Taiwan (2006~2016) (v20210108)
 """
 -------------------------------------------------------------------------------------------------------
 """
-import numpy as np
 DBS= [['', 'W1', 'W2', 'E1', 'E2', 'F1', 'F2', 'L1', 'L2', 'C1', 'C2'], 
     ['2006', '0.245617997', '0.255', '0.8999', '0.9808', '1.419349712', '-0.020220635', '1.767807542', '0.054791811', '0.0000847540 ', '0.2461'], 
     ['2007', '0.197849852', '0.262', '0.9028', '0.9813', '1.571257747', '0.001359116', '1.785599372', '0.052749174', '0.0000899452 ', '0.2403'], 
@@ -91,7 +117,10 @@ chart[0][5]="Capita"
 
 for i in range(1,DBS_Y):
   #NSA
-  nsa = NSA(Country_type, DBS[i][0],DBS[i][1],DBS[i][2],DBS[i][3],DBS[i][4],DBS[i][5],DBS[i][6],DBS[i][7],DBS[i][8],DBS[i][9],DBS[i][10])
+  nsa = NSA(Country_type, 
+            DBS[i][0], DBS[i][1], DBS[i][2], DBS[i][3], DBS[i][4], 
+            DBS[i][5], DBS[i][6], DBS[i][7], DBS[i][8], DBS[i][9], 
+            DBS[i][10])
   nsa.NSA_run()
   W, E, F, L, C = nsa.NSA_run()
   chart[i][1]=round(W,3)
@@ -103,8 +132,9 @@ for i in range(1,DBS_Y):
   chart[i][0]=DBS[i][0]
   print(chart[i][0])
   print("Water:" + str(chart[i][1]) + "; Energy: " + str(chart[i][2]) + "; Food: " + str(chart[i][3]) + "; Labor: " +str(chart[i][4]) + "; Capita: " + str(chart[i][5]))
+  
   #DRG
-  radar_graph = DRG(W, E, F, L, C)
+  radar_graph = DRG(W, E, F, L, C, DBS[i][0])
   radar_graph.DRG_run()
   
 #   input("Press Enter To Continue...")
