@@ -27,12 +27,12 @@ labels = ['L1', 'L2', 'L3', 'L4']
 
 # load dataset X_train
 names = country + features + labels
-filepath = "01_RawData/02_ClassificationTraining_ModelInput.csv"
+filepath = "01_Input/02_ClassificationTraining_ModelInput.csv"
 df_train = read_csv(filepath, header=None, skiprows=1, names=names, encoding='utf8')
 
 # load dataset X_pred
 names = country + features
-filepath = "01_RawData/04_ClassificationPrediction_ModelInput.csv"
+filepath = "01_Input/04_ClassificationPrediction_ModelInput.csv"
 df_pred = read_csv(filepath, header=None, skiprows=1, names=names, encoding='utf8')
 
 # Prepare X

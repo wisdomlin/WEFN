@@ -25,7 +25,7 @@ country = ['Country']
 features = ['F1', 'F2', 'F3', 'F4']
 labels = ['L1', 'L2', 'L3', 'L4']
 names = country + features + labels
-filepath = "01_RawData/02_ClassificationTraining_ModelInput.csv"
+filepath = "01_Input/02_ClassificationTraining_ModelInput.csv"
 df = read_csv(filepath, header=None, skiprows=1, names=names, encoding='utf8')
 X = df[features].values
 
