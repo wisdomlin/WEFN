@@ -47,7 +47,7 @@ cv = RepeatedKFold(n_splits=10, n_repeats=10, random_state=2652124)
 # 1. For nFolds
 cnt = 1
 for train_index, test_index in cv.split(X):
-    print('#', cnt)
+    print('Repeated KFold: #', cnt)
     cnt += 1
     # print("TRAIN:", train_index)
     # print("TEST:", test_index)
@@ -55,7 +55,7 @@ for train_index, test_index in cv.split(X):
     # majority vote
     pred_sumup = {}
     shape = df[labels].values[test_index].shape[0]
-    print('shape:', shape)
+    # print('shape:', shape)
     # 
     pred_sumup['L1'] = np.zeros(shape=(4,1))
     pred_sumup['L2'] = np.zeros(shape=(4,1))
@@ -80,11 +80,11 @@ for train_index, test_index in cv.split(X):
             ovr.fit(X_train, y_train)    
             # make predictions
             y_pred = ovr.predict(X_test)
-            print('y_pred is {}'.format(y_pred))
+            # print('y_pred is {}'.format(y_pred))
             # pred sum up for eclf
             pred_sumup[label] = np.add(pred_sumup[label], y_pred)
             y_preds.append(y_pred)
-            print('y_true is {}'.format(y_test))
+            # print('y_true is {}'.format(y_test))
             y_trues.append(y_test)
             # print('Test accuracy is {}'.format(accuracy_score(y_test, y_pred)))
         hamming_score = 1-hamming_loss(y_trues, y_preds)
@@ -96,7 +96,7 @@ for train_index, test_index in cv.split(X):
     # Compute Majority Vote 
     for key in pred_sumup:            
         for arr in pred_sumup[key]:
-            print('pred_sumup: ', arr)
+            # print('pred_sumup: ', arr)
             for i in range(len(arr)):
                 if arr[i] <= 3: 
                     arr[i] = 0
@@ -119,16 +119,16 @@ for name, model, score in models:
           "avg:", "{0:.3f}".format(sum(score)/len(score)), 
           "median:", "{0:.3f}".format(median(score)))
 
-# eclf
+# ECLF
 model_scores.append(eclf_HS_score) 
-model_names.append('eclf')
-print("model:", 'eclf', "\t", 
+model_names.append('ECLF')
+print("model:", 'ECLF', "\t", 
         "max:", "{0:.3f}".format(max(eclf_HS_score)), 
         "min:", "{0:.3f}".format(min(eclf_HS_score)), 
         "avg:", "{0:.3f}".format(sum(eclf_HS_score)/len(eclf_HS_score)), 
         "median:", "{0:.3f}".format(median(eclf_HS_score)))
     
-# model evaluation
+# save output of model evaluation
 pyplot.boxplot(model_scores, showmeans=True, labels=model_names)
 pyplot.title('Model Evaluation')
-pyplot.show()
+pyplot.savefig('03_Output/01_ClassificationModelEvaluation.png', bbox_inches='tight', dpi=150)
