@@ -37,7 +37,7 @@ Input = df[InputHeader].values
 # Define Output
 OutputFeatures = ['Water', 'Energy', 'Food', 'Labor', 'Capital']
 OutputHeader = Year + OutputFeatures
-OutputFilepath = "03_Output/01_ResourcePressureAssessment_ModelOutput.csv"
+OutputFilepath = "03_Output/02_ResourcePressureAssessment_ModelOutput.csv"
 OutputSize_X = np.size(OutputHeader)
 OutputSize_Y = np.size(Input, 0)
 Output = [[0]*OutputSize_X for _ in range(OutputSize_Y)]
