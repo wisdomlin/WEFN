@@ -1,6 +1,6 @@
 # Assessing the Water-Energy-Food Nexus with Machine Learning Models
 
-This is the code for the WEFN project. [publication link]
+This is the code for the WEFN project [publication link].
 
 The purpose of this research is not only to introduce machine learning models to the field of environmental issues, but also to provide a paradigm for improving policy decisions over time.
 
