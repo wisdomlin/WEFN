@@ -2,74 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pandas.io.parsers import read_csv
 
-
-
-# load dataset
-country = ['Year']
-features = ['W1', 'W2', 'E1', 'E2', 'F1', 'F2', 'L1', 'L2', 'C1', 'C2', ]
-names = country + features
-filepath = "01_Input/02_ClassificationTraining_ModelInput.csv"
-df = read_csv(filepath, header=None, skiprows=1, names=names, encoding='utf8')
-X = df[features].values
-"""
--------------------------------------------------------------------------------------------------------
-"""
-# DBS= [['', 'W1', 'W2', 'E1', 'E2', 'F1', 'F2', 'L1', 'L2', 'C1', 'C2'], 
-#     ['2006', '0.245617997', '0.255', '0.8999', '0.9808', '1.419349712', '-0.020220635', '1.767807542', '0.054791811', '0.0000847540 ', '0.2461'], 
-#     ['2007', '0.197849852', '0.262', '0.9028', '0.9813', '1.571257747', '0.001359116', '1.785599372', '0.052749174', '0.0000899452 ', '0.2403'], 
-#     ['2008', '0.229071634', '0.299', '0.8985', '0.9805', '1.811365883', '-0.045838453', '1.805747095', '0.051427473', '0.0000841168 ', '0.2446'], 
-#     ['2009', '0.295075547', '0.332', '0.8957', '0.9812', '1.45979251', '0.020258473', '1.681615244', '0.05282615', '0.0000764811 ', '0.1991'], 
-#     ['2010', '0.273624914', '0.297', '0.8994', '0.9814', '1.832000979', '-0.07530825', '1.843181958', '0.052415896', '0.0000760627 ', '0.2496'], 
-#     ['2011', '0.293812498', '0.318', '0.895', '0.9803', '2.1091698', '0.096211975', '1.848996671', '0.050611635', '0.0000749702 ', '0.2339'], 
-#     ['2012', '0.19894951', '0.31', '0.8993', '0.9787', '1.992585679', '0.021231381', '1.84507302', '0.050092081', '0.0000736405 ', '0.2235'], 
-#     ['2013', '0.243689074', '0.344', '0.8984', '0.9793', '1.987354278', '0.039620329', '1.824661908', '0.049603356', '0.0000686928 ', '0.2218'], 
-#     ['2014', '0.384600369', '0.326', '0.9009', '0.9808', '2.138186999', '0.022920261', '1.859485457', '0.049462948', '0.0000602092 ', '0.2168'], 
-#     ['2015', '0.305158518', '0.352', '0.9105', '0.9799', '1.969603501', '-0.12007659', '1.909378239', '0.049562422', '0.0000576556 ', '0.2083'], 
-#     ['2016', '0.187905287', '0.371', '0.9192', '0.9792', '1.924304421', '0.151947175', '1.882716298', '0.049436407', '0.0000536008 ', '0.209']]
-DBS_Y = np.size(DBS, 0)
-DBS_X = np.size(DBS, 1)
-
-Country_type = 3
-chart=[[0]*6 for _ in range(DBS_Y)] 
-chart[0][0]=" "
-chart[0][1]="Water"
-chart[0][2]="Energy"
-chart[0][3]="Food"
-chart[0][4]="Labor"
-chart[0][5]="Capita"
-
-
-for i in range(1,DBS_Y):
-  # NSA
-  nsa = NSA(Country_type, 
-            DBS[i][0], DBS[i][1], DBS[i][2], DBS[i][3], DBS[i][4], 
-            DBS[i][5], DBS[i][6], DBS[i][7], DBS[i][8], DBS[i][9], 
-            DBS[i][10])
-  W, E, F, L, C = nsa.NSA_run()
-  chart[i][1] = round(W,3)
-  chart[i][2] = round(E,3)
-  chart[i][3] = round(F,3)
-  chart[i][4] = round(L,3)
-  chart[i][5] = round(C,3)
-  
-  chart[i][0] = DBS[i][0]
-  print(chart[i][0])
-  print("Water:" + str(chart[i][1]) + "; Energy: " + str(chart[i][2]) + "; Food: " + str(chart[i][3]) + "; Labor: " +str(chart[i][4]) + "; Capita: " + str(chart[i][5]))
-  
-  # DRG
-  radar_graph = DRG(W, E, F, L, C, DBS[i][0])
-  radar_graph.DRG_run()
-  
-#   input("Press Enter To Continue...")
-
-for i in range(0,DBS_Y):
-  print (chart[i])
-  
-  
+# Resource Pressure Assessment Algorithm
 class NSA:
-  def __init__(self, CRT, Year, W1, W2, E1, E2, F1, F2, L1, L2, C1, C2):
+  def __init__(self, CRT, W1, W2, E1, E2, F1, F2, L1, L2, C1, C2):
     self.CRT = CRT
-    self.Year = float(Year)
     self.W1 = float(W1)
     self.W2 = float(W2)
     self.E1 = float(E1)
@@ -81,7 +17,7 @@ class NSA:
     self.C1 = float(C1)
     self.C2 = float(C2)
 
-  def NSA_run(self):
+  def run(self):
     if self.CRT == 3:
       Water = ((self.W1-0.40)/0.40+2)*2/5 + ((self.W2-0.29)/0.29+2)*3/5      
       Energy = ((self.E1-0.88)/0.88+2)*3/5 + ((self.E2-0.80)/0.80+2)*2/5      
@@ -90,63 +26,37 @@ class NSA:
       Capital = ((self.C1-0.096)/0.096+2)*1/4 + ((self.C2-0.223)/0.223+2)*3/4      
       return Water, Energy, Food, Labor, Capital
 
+# Define Input
+Year = ['Year']
+InputFeatures = ['W1', 'W2', 'E1', 'E2', 'F1', 'F2', 'L1', 'L2', 'C1', 'C2']
+InputHeader = Year + InputFeatures
+InputFilepath = "01_Input/06_ResourcePressureAssessment_ModelInput.csv"
+df = read_csv(InputFilepath, header=None, names=InputHeader, encoding='utf8')
+Input = df[InputHeader].values
 
-class DRG:
-  def __init__(self, Water, Energy, Food, Labor, Capital, PlotTitle):
-    self.Water = float(Water)
-    self.Energy = float(Energy)
-    self.Food = float(Food)
-    self.Labor = float(Labor)
-    self.Capital = float(Capital)
-    self.PlotTitle = PlotTitle
+# Define Output
+OutputFeatures = ['Water', 'Energy', 'Food', 'Labor', 'Capital']
+OutputHeader = Year + OutputFeatures
+OutputFilepath = "03_Output/01_ResourcePressureAssessment_ModelOutput.csv"
+OutputSize_X = np.size(OutputHeader)
+OutputSize_Y = np.size(Input, 0)
+Output = [[0]*OutputSize_X for _ in range(OutputSize_Y)]
+
+# Define Process 
+Output[0] = OutputHeader
+Country_type = 3
+for i in range(1, OutputSize_Y):
+  Nsa = NSA(Country_type, 
+            Input[i][1], Input[i][2], Input[i][3], Input[i][4], Input[i][5], 
+            Input[i][6], Input[i][7], Input[i][8], Input[i][9], Input[i][10])
+  W, E, F, L, C = Nsa.run()
+  Output[i][0] = Input[i][0]
+  Output[i][1] = round(W,3)
+  Output[i][2] = round(E,3)
+  Output[i][3] = round(F,3)
+  Output[i][4] = round(L,3)
+  Output[i][5] = round(C,3)
   
-  def DRG_run(self):
-    # correct display of Chinese and minus signs
-    plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
-    plt.rcParams['axes.unicode_minus'] = False
-    
-    # drawing style
-    # plt.style.use('ggplot')
-    # plt.style.use('seaborn')
-    # plt.style.use('seaborn-whitegrid')
-    plt.style.use('seaborn-poster')
-    
-    # plot data construction
-    values = [self.Water, self.Energy, self.Food, self.Labor, self.Capital]
-    features = ['Water','Energy','Food','Labor','Capital']
-    
-    # set the angle of radar chart. The circle is divided into equal parts.
-    angles = np.linspace(0, 2*np.pi, len(values), endpoint=False)
-    
-    # In order to close the radar chart in a circle, the following steps are required.
-    values = np.concatenate((values, [values[0]]))
-    angles = np.concatenate((angles, [angles[0]]))
-    features = np.concatenate((features, [features[0]]))
-    
-    # Create a new figure
-    fig = plt.figure()
-    
-    # Add subplot with polar axes. "111" means "1x1 grid, first subplot".
-    ax = fig.add_subplot(111, polar=True)
-    
-    # Draw a line chart
-    ax.plot(angles, values, 'o-', linewidth=2)
-    
-    # Set the color and transparency of line chart
-    ax.fill(angles, values, alpha=0.25)
-    
-    # Add feature names for each feature
-    ax.set_thetagrids(angles * 180/np.pi, features)
-    
-    # Set the range of the radar chart
-    ax.set_ylim(0, 3)
-    
-    # Set the plot title
-    plt.title(self.PlotTitle)
-    
-    # Add grid lines
-    ax.grid(True)
-    
-    # show the plot
-    plt.show()
-
+# Save Output 
+np.savetxt(OutputFilepath, Output, fmt="%s", delimiter=',')
+  
