@@ -9,11 +9,9 @@ The purpose of this research is not only to introduce machine learning models to
 # Instructions
 ## Step 1: Classification Model Evaluation
 
-## Step 2: Resource Background Prediction
+## Step 2: Resource Nexus Assessment
 
-## Step 3: Resource Pressure Assessment
+## Step 3: Regression Model Evaluation
 
-## Step 4: Regression Model Evaluation
-
-## Step 5: Policy Scenario Optimization
+## Step 4: Policy Scenario Optimization
 
