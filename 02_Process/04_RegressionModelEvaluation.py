@@ -45,37 +45,103 @@ Y_Water = df['Water'].values
 Y_Energy = df['Energy'].values
 Y_Food = df['Food'].values
 
-# Y Setting
-Y = Y_Water
-
-# train_test_split
-x_train, x_test, y_train, y_test = train_test_split(X, Y, 
-                                     train_size = 0.8, 
-                                     test_size = 0.2, 
-                                     shuffle = False)
+Subsystems = []
+Subsystems.append(('Water', Y_Water))
+Subsystems.append(('Energy', Y_Energy))
+Subsystems.append(('Food', Y_Food))
 
 # Define models
-reg1 = GradientBoostingRegressor(random_state=1)
-reg2 = RandomForestRegressor(random_state=1)
-reg3 = LinearRegression()
-ereg = VotingRegressor([('gb', reg1), ('rf', reg2), ('lr', reg3)])
+M_GB = GradientBoostingRegressor(random_state=1)
+M_RF = RandomForestRegressor(random_state=1)
+M_LR = LinearRegression()
+M_Vote = VotingRegressor([('gb', M_GB), ('rf', M_RF), ('lr', M_LR)])
 
+Models = []
+Models.append(('GradientBoostingRegressor', M_GB))
+Models.append(('RandomForestRegressor', M_RF))
+Models.append(('LinearRegression', M_LR))
+Models.append(('VotingRegressor', M_Vote))
+
+# Residual Container
+Residual_Subsystems = []
+
+# For each Subsystem: 
+for Y_name, Y in Subsystems: 
+  # train_test_split
+  print('Y_name:', Y_name)
+  x_train, x_test, y_train, y_test = train_test_split(X, Y, 
+                                    train_size = 0.8, 
+                                    test_size = 0.2, 
+                                    shuffle = False)
+  
+  scores = []
+  Residual_Models = []
+# For each Model: 
+  for m_name, m in Models: 
+    print('m_name:', m_name)
+    # Train 
+    m.fit(x_train, y_train)
+    
+    # Test
+    y_test_pred = m.predict(x_test)
+    
+    # Train MSE
+    y_train_pred = m.predict(x_train)
+    MSE_train = mean_squared_error(y_train, y_train_pred)
+    # print('y_train:', y_train)
+    # print('y_train_pred:', y_train_pred)
+    # print('MSE_train:', "{:.2e}".format(MSE_train))
+    
+    # Test MSE
+    MSE_test = mean_squared_error(y_test, y_test_pred)
+    # print('y_test:', y_test)
+    # print('y_test_pred:', y_test_pred)
+    # print('MSE_test:', "{:.2e}".format(MSE_test))
+        
+    # Score Append
+    scores.append(MSE_test)
+        
+    # Residual  
+    Residual_Train = []  
+    zip_object = zip(y_train, y_train_pred)
+    for list1_i, list2_i in zip_object:
+      # print('list1_i:', "{:.10e}".format(list1_i))
+      # print('list2_i:', "{:.10e}".format(list2_i))
+      # print('list1_i - list2_i:', "{:.10e}".format(list1_i - list2_i))
+      Residual_Train.append(list1_i - list2_i)
+
+    Residual_Test = []  
+    zip_object = zip(y_test, y_test_pred)
+    for list1_i, list2_i in zip_object:
+      # print('list1_i:', "{:.10e}".format(list1_i))
+      # print('list2_i:', "{:.10e}".format(list2_i))
+      # print('list1_i - list2_i:', "{:.10e}".format(list1_i - list2_i))
+      Residual_Test.append(list1_i - list2_i)
+
+    Residual = Residual_Train + Residual_Test
+    Residual_Models.append (Residual)
+    print('Residual:', Residual)
+    
+    # # print arrays
+    # print('y_test: ')
+    # print(["{0:0.6f}".format(i) for i in y_test])
+    # print('y_test_pred: ')
+    # print(["{0:0.6f}".format(i) for i in y_test_pred])
+    # print('y_train: ')
+    # print(["{0:0.6f}".format(i) for i in y_train])
+    # print('y_train_pred: ')
+    # print(["{0:0.6f}".format(i) for i in y_train_pred])    
+
+  # Compare Scores
+  # print(np.argsort(scores), '\n')
+  
+  Residual_Subsystems.append(Residual_Models)
+
+print('Residual_Subsystems:', Residual_Subsystems)
 # TODO: Need to Refresh the model and then do the next training?
 
 
-# Training 
-reg1.fit(x_train, y_train)
-reg2.fit(x_train, y_train)
-reg3.fit(x_train, y_train)
-ereg.fit(x_train, y_train)
 
-# Making Predictions
-# xt = X[:2]
-# x_test = X
-pred1 = reg1.predict(x_test)
-pred2 = reg2.predict(x_test)
-pred3 = reg3.predict(x_test)
-pred4 = ereg.predict(x_test)
 
 # # Plot the results
 # plt.figure()
@@ -100,41 +166,6 @@ pred4 = ereg.predict(x_test)
 # print(r2_2)
 # print(r2_3)
 # print(r2_4)
-
-# MSE for test
-print('MSE for test')
-MSE_1 = mean_squared_error(y_test, pred1)
-MSE_2 = mean_squared_error(y_test, pred2)
-MSE_3 = mean_squared_error(y_test, pred3)
-MSE_4 = mean_squared_error(y_test, pred4)
-print(MSE_1)
-print(MSE_2)
-print(MSE_3)
-print(MSE_4)
-
-# MSE for train
-print('MSE for train')
-pred1 = reg1.predict(x_train)
-pred2 = reg2.predict(x_train)
-pred3 = reg3.predict(x_train)
-pred4 = ereg.predict(x_train)
-MSE_1 = mean_squared_error(y_train, pred1)
-MSE_2 = mean_squared_error(y_train, pred2)
-MSE_3 = mean_squared_error(y_train, pred3)
-MSE_4 = mean_squared_error(y_train, pred4)
-print(MSE_1)
-print(MSE_2)
-print(MSE_3)
-print(MSE_4)
-
-# print y_test & Pred
-print('print y_test & Pred')
-print(["{0:0.6f}".format(i) for i in y_test])
-
-print(["{0:0.6f}".format(i) for i in pred1])
-print(["{0:0.6f}".format(i) for i in pred2])
-print(["{0:0.6f}".format(i) for i in pred3])
-print(["{0:0.6f}".format(i) for i in pred4])
 
 
 
