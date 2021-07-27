@@ -45,12 +45,13 @@ Y_Water = df['Water'].values
 Y_Energy = df['Energy'].values
 Y_Food = df['Food'].values
 
+# Define Subsystems
 Subsystems = []
 Subsystems.append(('Water', Y_Water))
 Subsystems.append(('Energy', Y_Energy))
 Subsystems.append(('Food', Y_Food))
 
-# Define models
+# Define Models
 M_GB = GradientBoostingRegressor(random_state=1)
 M_RF = RandomForestRegressor(random_state=1)
 M_LR = LinearRegression()
@@ -62,8 +63,9 @@ Models.append(('RandomForestRegressor', M_RF))
 Models.append(('LinearRegression', M_LR))
 Models.append(('VotingRegressor', M_Vote))
 
-# Residual Container
+# Residual Containers
 Residual_Subsystems = []
+Ypred_Subsystems = []
 
 # For each Subsystem: 
 for Y_name, Y in Subsystems: 
@@ -76,6 +78,7 @@ for Y_name, Y in Subsystems:
   
   scores = []
   Residual_Models = []
+  Ypred_Models = []
 # For each Model: 
   for m_name, m in Models: 
     print('m_name:', m_name)
@@ -89,13 +92,13 @@ for Y_name, Y in Subsystems:
     y_train_pred = m.predict(x_train)
     MSE_train = mean_squared_error(y_train, y_train_pred)
     # print('y_train:', y_train)
-    # print('y_train_pred:', y_train_pred)
+    print('y_train_pred:', y_train_pred)
     # print('MSE_train:', "{:.2e}".format(MSE_train))
     
     # Test MSE
     MSE_test = mean_squared_error(y_test, y_test_pred)
     # print('y_test:', y_test)
-    # print('y_test_pred:', y_test_pred)
+    print('y_test_pred:', y_test_pred)
     # print('MSE_test:', "{:.2e}".format(MSE_test))
         
     # Score Append
@@ -120,7 +123,13 @@ for Y_name, Y in Subsystems:
 
     Residual = Residual_Train + Residual_Test
     Residual_Models.append (Residual)
-    print('Residual:', Residual)
+    # print('Residual:', Residual)
+     
+    # Ypred 
+    # Ypred = y_train_pred + y_test_pred
+    Ypred = np.concatenate([y_train_pred, y_test_pred]).tolist()
+    Ypred_Models.append(Ypred)
+    print('Ypred:', Ypred)
     
     # # print arrays
     # print('y_test: ')
@@ -136,10 +145,14 @@ for Y_name, Y in Subsystems:
   # print(np.argsort(scores), '\n')
   
   Residual_Subsystems.append(Residual_Models)
+  Ypred_Subsystems.append(Ypred_Models)
 
-print('Residual_Subsystems:', Residual_Subsystems)
+# print('Residual_Subsystems:', Residual_Subsystems)
+print('Ypred_Subsystems:', Ypred_Subsystems)
 # TODO: Need to Refresh the model and then do the next training?
 
+
+# Residual Plot 
 
 
 
@@ -157,15 +170,6 @@ print('Residual_Subsystems:', Residual_Subsystems)
 # plt.title('Regressor predictions and their average')
 # plt.show()
 
-# R2
-# r2_1 = r2_score(y_test, pred1)
-# r2_2 = r2_score(y_test, pred2)
-# r2_3 = r2_score(y_test, pred3)
-# r2_4 = r2_score(y_test, pred4)
-# print(r2_1)
-# print(r2_2)
-# print(r2_3)
-# print(r2_4)
 
 
 
