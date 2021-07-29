@@ -97,15 +97,9 @@ for Y_name, Y in Subsystems:
     # Train MSE
     y_train_pred = m.predict(x_train)
     MSE_train = mean_squared_error(y_train, y_train_pred)
-    # print('y_train:', y_train)
-    # print('y_train_pred:', y_train_pred)
-    # print('MSE_train:', "{:.2e}".format(MSE_train))
     
     # Test MSE
     MSE_test = mean_squared_error(y_test, y_test_pred)
-    # print('y_test:', y_test)
-    # print('y_test_pred:', y_test_pred)
-    # print('MSE_test:', "{:.2e}".format(MSE_test))
         
     # Score Append
     Scores_Models.append(MSE_test)
@@ -114,36 +108,25 @@ for Y_name, Y in Subsystems:
     Residual_Train = []  
     zip_object = zip(y_train, y_train_pred)
     for list1_i, list2_i in zip_object:
-      # print('list1_i:', "{:.10e}".format(list1_i))
-      # print('list2_i:', "{:.10e}".format(list2_i))
-      # print('list1_i - list2_i:', "{:.10e}".format(list1_i - list2_i))
       Residual_Train.append(list1_i - list2_i)
 
     Residual_Test = []  
     zip_object = zip(y_test, y_test_pred)
     for list1_i, list2_i in zip_object:
-      # print('list1_i:', "{:.10e}".format(list1_i))
-      # print('list2_i:', "{:.10e}".format(list2_i))
-      # print('list1_i - list2_i:', "{:.10e}".format(list1_i - list2_i))
       Residual_Test.append(list1_i - list2_i)
 
     Residual = Residual_Train + Residual_Test
     Residual_Models.append (Residual)
-    # print('Residual:', Residual)
      
     # Ypred 
     Ypred = np.concatenate([y_train_pred, y_test_pred]).tolist()
     Ypred_Models.append(Ypred)
-    # print('Ypred:', Ypred)  
 
   # Compare Scores
   print('Model Ranking:', np.argsort(Scores_Models), '\n')
   
   Residual_Subsystems.append(Residual_Models)
   Ypred_Subsystems.append(Ypred_Models)
-
-# print('Residual_Subsystems:', Residual_Subsystems)
-# print('Ypred_Subsystems:', Ypred_Subsystems)
 
 # -------------------------------------------
 # Part 2: Residual Plot Drawing
