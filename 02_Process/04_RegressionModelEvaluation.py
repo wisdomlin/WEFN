@@ -55,17 +55,17 @@ Models.append(('GradientBoostingRegressor', M_GB))
 M_RF = RandomForestRegressor(random_state=1)
 Models.append(('RandomForestRegressor', M_RF))
 
+M_DT = DecisionTreeRegressor(max_depth=10, random_state=1)
+Models.append(('DecisionTreeRegressor', M_DT))
+
 M_LR = LinearRegression()
 Models.append(('LinearRegression', M_LR))
-
-M_Vote = VotingRegressor([('gb', M_GB), ('rf', M_RF), ('lr', M_LR)])
-Models.append(('VotingRegressor', M_Vote))
 
 M_KNN = KNeighborsRegressor(n_neighbors=3, weights='distance', radius=1)
 Models.append(('KNeighborsRegressor', M_KNN))
 
-M_DT = DecisionTreeRegressor(max_depth=10, random_state=1)
-Models.append(('DecisionTreeRegressor', M_DT))
+M_Vote = VotingRegressor([('gb', M_GB), ('rf', M_RF), ('dt', M_DT), ('lr', M_LR), ('knn', M_KNN)])
+Models.append(('VotingRegressor', M_Vote))
 
 # Subsystems Metadata Containers
 Residual_Subsystems = []
@@ -84,10 +84,13 @@ for Y_name, Y in Subsystems:
   Scores_Models = []
   Residual_Models = []
   Ypred_Models = []
+  ModelNo = 0
   
   # For each Model: 
   for m_name, m in Models: 
-    print('m_name:', m_name)
+    print(ModelNo, 'm_name:', m_name, end='\t\t')
+    ModelNo += 1
+    
     # Train 
     m.fit(x_train, y_train)
     
@@ -103,6 +106,7 @@ for Y_name, Y in Subsystems:
         
     # Score Append
     Scores_Models.append(MSE_test)
+    print('MSE:', MSE_test)
         
     # Residual Computations
     Residual_Train = []  
@@ -122,7 +126,7 @@ for Y_name, Y in Subsystems:
     Ypred = np.concatenate([y_train_pred, y_test_pred]).tolist()
     Ypred_Models.append(Ypred)
 
-  # Compare Scores
+  # Model Ranking
   print('Model Ranking:', np.argsort(Scores_Models), '\n')
   
   Residual_Subsystems.append(Residual_Models)
@@ -171,13 +175,13 @@ for Sn_Ypred, Sn_Residual in zip(Ypred_Subsystems, Residual_Subsystems):
     elif Mn==1:
       title = 'Random Forest'
     elif Mn==2: 
-      title = 'Linear Regression' 
+      title = 'Decision Tree Regressor'
     elif Mn==3:
-      title = 'Voting Regressor'
+      title = 'Linear Regression' 
     elif Mn==4: 
       title = 'K Nearest Neighbors'
     elif Mn==5:
-      title = 'Decision Tree Regressor' 
+      title = 'Voting Regressor'
     
     # Subplot Indexing and Drawing
     PltIdx = Mn*ncols + Sn
